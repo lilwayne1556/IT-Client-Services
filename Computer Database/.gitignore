@@ -1,0 +1,6 @@
+# Ignore database files
+*.accdb
+*.laccdb
+
+# Ignore text files
+*.txt
