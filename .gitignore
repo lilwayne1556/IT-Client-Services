@@ -4,3 +4,6 @@
 
 # Ignore text files
 *.txt
+
+# Ignore tag file
+tags
