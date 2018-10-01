@@ -1,8 +1,8 @@
 ﻿function Get-Filename($title, $filter){
     # https://gallery.technet.microsoft.com/scriptcenter/GUI-popup-FileOpenDialog-babd911d
 
-    Start-Sleep -s 2
-    $openFileDialog = New-Object windows.forms.openfiledialog
+    [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+    $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
     $openFileDialog.initialDirectory = [System.IO.Directory]::GetCurrentDirectory()
     $openFileDialog.title = $title
     $openFileDialog.filter = $filter

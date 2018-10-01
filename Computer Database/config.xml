@@ -1,0 +1,12 @@
+<Config>
+    <Checklist>
+        <!--Location for default checklist-->
+        <Default Location="" />
+        <Folder Location="" />
+        <!--Location for label template-->
+        <Label Location="">
+            <!--Template for the column layout of the sheet-->
+        </Label>
+    </Checklist>
+    <Database Location="" />
+</Config>

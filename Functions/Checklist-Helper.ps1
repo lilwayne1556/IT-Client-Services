@@ -1,10 +1,52 @@
 ﻿ function Checklist-Helper(){
     # Used for repeating script
     $ChecklistScript = {
+
+        # Configuration
+        # Gets the config from an XML file
+        $Config = From-XML "Checklist"
+
+        # Checks if the user configured default location for checklist spread sheet
+        if(-Not ($Config.Default.Location)){
+            $filename = Get-Filename "Select default checklist excel sheet" "Excel Workbook (*.xlsm, *.xlsx, *.xls)|*.xlsm;*.xlsx;*.xls"
+            if(-Not $filename){
+                "Failed to get default spread sheet"
+                Wait
+                return
+            }
+            Change-XML "Checklist.Default.Location" $filename
+        }
+
+        # Checks if the user configured their label excel sheet location
+        if(-Not ($Config.Label.Location)){
+            $filename = Get-Filename "Select label excel sheet" "Excel Workbook (*.xlsm, *.xlsx, *.xls)|*.xlsm;*.xlsx;*.xls"
+            if(-Not $filename){
+                "Failed to get label sheet"
+                Wait
+                return
+            }
+            Change-XML "Checklist.Label.Location"  $filename
+        }
+
+        # Checks if the user configured their checklist folder location
+        if(-Not ($Config.Folder.Location)){
+            $folder = Get-Folder "Select Checklist folder"
+            if(-Not $folder){
+                "Failed to get checklist folder"
+                Wait
+                return
+            }
+            Change-XML "Checklist.Folder.Location" $folder
+        }
+
+        # Get any changes that might have occured
+        $Config = From-XML "Checklist"
+
         # Prompt for Computer Name
         $ComputerName = Read-Host -Prompt 'Input the computer name: '
         $ComputerName = $ComputerName.ToUpper().Trim()
 
+        # Checks if computer is online
         if(-Not (Is-Online $ComputerName)){
             "The computer is offline or the name is wrong"
             Start-Sleep -s 3
@@ -17,30 +59,35 @@
         # Get Serial Number
         $SerialNumber = Get-Serial-Number $ComputerName
 
-        if(Test-Path "\\nas\its\its-us\ustechs\checklists\$($ComputerName).xlsm") {
+        # Check if a checklist exists
+        if(Test-Path "$($Config.Folder.Location)\$($ComputerName).xlsm") {
             $Override = Read-Host -Prompt "Checklist exists, Override? (Y/n)"
             if($Override[0] -imatch "n"){
                 .$ChecklistScript
             }
         }
 
-        $filename = Get-Filename("Select label excel sheet", "Excel Workbook (*.xlsm, *.xlsx)|*.xlsm;*.xlsx")
-
-        if($filename) {
+        # Add computer to label sheet
+        if(Test-Path $Config.Label.Location) {
             $ExcelAppLabel = New-Object -comobject Excel.Application
-            $WorkbookLabel = $ExcelAppLabel.Workbooks.Open($filename)
+            $WorkbookLabel = $ExcelAppLabel.Workbooks.Open($Config.Label.Location)
             $Labels = $WorkbookLabel.Worksheets.Item(1)
+
             # Check if user selects correct spreadsheet
             if($Labels.Cells.Item(1, 1).Value2 -inotmatch "Computer Name" -and $Labels.Cells.Item(1, 2).Value2 -inotmatch "MAC (with colons)" -and $Labels.Cells.Item(1, 3).Value2 -inotmatch "Service Tag") {
                 "Improper Label Spreadsheet"
                 "MAC - $($MacAddress)"
                 "Serial Number - $($SerialNumber)"
+
+                # Remove filename if the excel sheet is not a proper one
+                Change-XML "Checklist.Label.Location" ""
             } else {
                 for($row=1; $row -lt $Labels.Rows.Count; $row++){
                     if(!$Labels.Cells.Item($row, 1).Value2 -and !$Labels.Cells.Item($row, 2).Value2 -and !$Labels.Cells.Item($row, 3).Value2){
                         $Labels.Cells.Item($row, 1) = $ComputerName
                         $Labels.Cells.Item($row, 2) = $MacAddress.ToUpper()
                         $Labels.Cells.Item($row, 3) = $SerialNumber.ToUpper()
+
                         # Don't add last column if it isn't apart of the spread sheet
                         if($Labels.Cells.Item(1, 4).Value2) {
                             $Labels.Cells.Item($row, 4) = "University of Northern Iowa"
@@ -56,7 +103,10 @@
         } else {
             "MAC - $($MacAddress)"
             "Serial Number - $($SerialNumber)"
+            Change-XML "Checklist.Label.Location" ""
         }
+
+        $FirstName, $LastName, $Email = Get-Owner
 
         "Please make computer label now"
         Start-Sleep -s 2
@@ -69,8 +119,8 @@
         $ExcelApp.Visible = $TRUE
 
         # Open existing checklist
-        $Workbook = $ExcelApp.Workbooks.Open("\\nas\ITS\ITS-US\Ustechs\checklists\##Default Machine Checklist - Copy.xlsm")
-        $Workbook.SaveAs("\\nas\ITS\ITS-US\Ustechs\checklists\$($ComputerName).xlsm")
+        $Workbook = $ExcelApp.Workbooks.Open($Config.Default.Location)
+        $Workbook.SaveAs("$($Config.Folder.Location)\$($ComputerName).xlsm")
 
         # Select proper sheet in the workbook
         $Checklist = $Workbook.WorkSheets.Item(1)
@@ -91,7 +141,7 @@
         for ($i=1; $i -lt 12; $i++) {
             $CheckBoxes[$i].Value = 1
         }
-    
+
         $OU = Get-OU $ComputerName
         $CheckBoxes[12].Value = 1
         $CheckBoxes[13].Value = 1
@@ -99,8 +149,9 @@
 
         # Run all SCCM Actions https://gallery.technet.microsoft.com/scriptcenter/Start-SCCM-Client-Actions-d3d84c3c
         Run-Actions $ComputerName
-
-
+        $CheckBoxes[14].Value = 1
+        $CheckBoxes[15].Value = 1
+        $CheckBoxes[16].Value = 1
         "All actions are available"
 
         # Check if laptop
@@ -117,8 +168,8 @@
                     $Username = $DepartmentName.ToLower()
                 } else {
                     # Individual laptop
-                    $localFirstName = Read-Host -Prompt "What is the user's first name? "
-                    $localLastName = Read-Host -Prompt "What is the user's last name? "
+                    $localFirstName = $FirstName
+                    $localLastName = $LastName
                     $Username = $localFirstName.ToLower()
                 }
 
@@ -197,7 +248,6 @@
             "Proper drivers are installed"
         }
 
-        . .\Get-Programs.ps1
         $Programs = Get-Programs $ComputerName
 
         # Check if programs are available
@@ -265,6 +315,9 @@
         $Workbook.Save()
 
         # FM Checkbox number is 61
+
+        # Add computer to database
+        Add-Computer $ComputerName "$($FirstName) $($LastName)" $Email
 
         # Bitlocker Status
         $Bitlocker = manage-bde -ComputerName $ComputerName -status | Select-String -Pattern "Percentage Encrypted:"

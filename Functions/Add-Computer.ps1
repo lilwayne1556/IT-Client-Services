@@ -1,6 +1,21 @@
-﻿function Add-Computer($ComputerName, $Owner){
+﻿function Add-Computer($ComputerName, $Owner, $Email){
     # https://technet.microsoft.com/en-us/library/2009.05.scriptingguys.aspx
 
+    $Config = From-XML "Database"
+
+    if(-Not ($Config.Location)){
+        $folder = Get-Folder "Select database location"
+        Change-XML "Database.Location" $folder
+        $Config = From-XML "Database"
+    }
+
+
+    $Data = Query-Database $ComputerName
+
+    if($Data){
+        "$($ComputerName) already exists in database"
+        return
+    }
     try{
         $LastUser = Get-Last-User $ComputerName
         $MAC = Get-Mac $ComputerName | Out-String
@@ -12,7 +27,7 @@
         $BIOSVersion = Get-BIOS-Version $ComputerName | Out-String
         $RAM = Get-RAM $ComputerName | Out-String
         $Monitors = Get-Monitors $ComputerName
-        $Printers = Get-Printers $ComputerName
+        $Printers = Get-Printers $ComputerName | Out-String
         $Programs = Get-Programs $ComputerName | Out-String
     }
     catch{
@@ -20,12 +35,13 @@
         return
     }
 
-    $Database = Connect-Database "\\nas\its\ITS-US\Ustechs\Wayne's Script\Database\Inventory.accdb"
+    $Database = Connect-Database $Config.Location
     $Table = new-object -com "ADODB.Recordset"
     $Table.Open("Select * from Inventory", $Database, 3, 3)
     $Table.AddNew()
-    $Table.Fields.Item("Computer Name") = $ComputerName
+    $Table.Fields.Item("Computer Name") = $ComputerName.ToUpper()
     $Table.Fields.Item("Owner") = $Owner
+    $Table.Fields.Item("Email") = $Email
     $Table.Fields.Item("Last User") = $LastUser
     $Table.Fields.Item("MAC") = $MAC
     $Table.Fields.Item("Serial Number") = $SerialNumber
