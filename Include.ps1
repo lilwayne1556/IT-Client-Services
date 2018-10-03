@@ -1,3 +1,4 @@
+. ..\Functions\From-CatID.ps1
 . ..\Functions\Add-Computer.ps1
 . ..\Functions\Checklist-Helper.ps1
 . ..\Functions\Connect-Database.ps1

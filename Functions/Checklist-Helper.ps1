@@ -106,7 +106,21 @@
             Change-XML "Checklist.Label.Location" ""
         }
 
-        $FirstName, $LastName, $Email = Get-Owner
+        $OU = Get-OU $ComputerName
+
+        $ADUser = From-CatID $ComputerName
+        if($ADUser)
+        {
+            $FirstName = $ADUser.GivenName
+            $LastName = $ADUser.Surname
+            $Email = $ADUser.UserPrincipalName
+        }
+        else
+        {
+            $FirstName = $OU
+            $LastName = ""
+            $Email = ""
+        }
 
         "Please make computer label now"
         Start-Sleep -s 2
@@ -142,7 +156,6 @@
             $CheckBoxes[$i].Value = 1
         }
 
-        $OU = Get-OU $ComputerName
         $CheckBoxes[12].Value = 1
         $CheckBoxes[13].Value = 1
         $Checklist.Cells.Item(31, 3) = "\\UNI\...\$($OU)"

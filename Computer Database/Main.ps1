@@ -21,11 +21,11 @@
 # 3. Search by Owner
 # 4. Search by Hardware information "MAC, Serial, Make, Model"
 
-. .\..\Include.ps1
+Push-Location $PSScriptRoot
+. ..\Include.ps1
 
 Start-Sleep -s 5
 $Main = {
-    Push-Location $PSScriptRoot
 
     Clear-Host
 "
