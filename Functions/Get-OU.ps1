@@ -8,7 +8,7 @@
 
     $OUName = ($DistinguishedName.Split(","))[2]
     if($OUName -imatch "Computer"){
-        $OUName = ($DistinguishedName.Split(","))[1]
+        $OUName = ($DistinguishedName.Split(","))[3]
     }
 
     return $OUName.SubString($OUName.IndexOf("=")+1)
