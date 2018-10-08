@@ -10,29 +10,18 @@
         if(-Not ($Config.Default.Location)){
             $filename = Get-Filename "Select default checklist excel sheet" "Excel Workbook (*.xlsm, *.xlsx, *.xls)|*.xlsm;*.xlsx;*.xls"
             if(-Not $filename){
-                "Failed to get default spread sheet"
+                Write-Host "Failed to get default spread sheet"
                 Wait
                 return
             }
             Change-XML "Checklist.Default.Location" $filename
         }
 
-        # Checks if the user configured their label excel sheet location
-        if(-Not ($Config.Label.Location)){
-            $filename = Get-Filename "Select label excel sheet" "Excel Workbook (*.xlsm, *.xlsx, *.xls)|*.xlsm;*.xlsx;*.xls"
-            if(-Not $filename){
-                "Failed to get label sheet"
-                Wait
-                return
-            }
-            Change-XML "Checklist.Label.Location"  $filename
-        }
-
         # Checks if the user configured their checklist folder location
         if(-Not ($Config.Folder.Location)){
             $folder = Get-Folder "Select Checklist folder"
             if(-Not $folder){
-                "Failed to get checklist folder"
+                Write-Host "Failed to get checklist folder"
                 Wait
                 return
             }
@@ -48,7 +37,7 @@
 
         # Checks if computer is online
         if(-Not (Is-Online $ComputerName)){
-            "The computer is offline or the name is wrong"
+            Write-Host "The computer is offline or the name is wrong"
             Start-Sleep -s 3
             .$ChecklistScript
         }
@@ -68,45 +57,7 @@
         }
 
         # Add computer to label sheet
-        if(Test-Path $Config.Label.Location) {
-            $ExcelAppLabel = New-Object -comobject Excel.Application
-            $WorkbookLabel = $ExcelAppLabel.Workbooks.Open($Config.Label.Location)
-            $Labels = $WorkbookLabel.Worksheets.Item(1)
-
-            # Check if user selects correct spreadsheet
-            if($Labels.Cells.Item(1, 1).Value2 -inotmatch "Computer Name" -and $Labels.Cells.Item(1, 2).Value2 -inotmatch "MAC (with colons)" -and $Labels.Cells.Item(1, 3).Value2 -inotmatch "Service Tag") {
-                "Improper Label Spreadsheet"
-                "MAC - $($MacAddress)"
-                "Serial Number - $($SerialNumber)"
-
-                # Remove filename if the excel sheet is not a proper one
-                Change-XML "Checklist.Label.Location" ""
-            } else {
-                for($row=1; $row -lt $Labels.Rows.Count; $row++){
-                    if(!$Labels.Cells.Item($row, 1).Value2 -and !$Labels.Cells.Item($row, 2).Value2 -and !$Labels.Cells.Item($row, 3).Value2){
-                        $Labels.Cells.Item($row, 1) = $ComputerName
-                        $Labels.Cells.Item($row, 2) = $MacAddress.ToUpper()
-                        $Labels.Cells.Item($row, 3) = $SerialNumber.ToUpper()
-
-                        # Don't add last column if it isn't apart of the spread sheet
-                        if($Labels.Cells.Item(1, 4).Value2) {
-                            $Labels.Cells.Item($row, 4) = "University of Northern Iowa"
-                        }
-                        $WorkbookLabel.Save()
-                        $ExcelAppLabel.Workbooks.Close()
-                        $ExcelAppLabel.Quit()
-                        "The computer has been added to your label excel sheet"
-                        break
-                    }
-                }
-            }
-        } else {
-            "MAC - $($MacAddress)"
-            "Serial Number - $($SerialNumber)"
-            Change-XML "Checklist.Label.Location" ""
-        }
-
-        $OU = Get-OU $ComputerName
+        Add-Label $ComputerName
 
         $ADUser = From-CatID $ComputerName
         if($ADUser)
@@ -115,14 +66,8 @@
             $LastName = $ADUser.Surname
             $Email = $ADUser.UserPrincipalName
         }
-        else
-        {
-            $FirstName = $OU
-            $LastName = ""
-            $Email = ""
-        }
 
-        "Please make computer label now"
+        Write-Host "Please make computer label now"
         Start-Sleep -s 2
 
         # Start Remote Session
@@ -156,6 +101,7 @@
             $CheckBoxes[$i].Value = 1
         }
 
+        $OU = Get-OU $ComputerName
         $CheckBoxes[12].Value = 1
         $CheckBoxes[13].Value = 1
         $Checklist.Cells.Item(31, 3) = "\\UNI\...\$($OU)"
@@ -165,7 +111,7 @@
         $CheckBoxes[14].Value = 1
         $CheckBoxes[15].Value = 1
         $CheckBoxes[16].Value = 1
-        "All actions are available"
+        Write-Host "All actions are available"
 
         # Check if laptop
         if($ComputerName -imatch '-L[0-9]*$'){
@@ -231,7 +177,7 @@
                             $Checkboxes[31].Value = 1
                         }
 
-                        "The user, $($Username) has been created. Please create a label now."
+                        Write-Host "The user, $($Username) has been created. Please create a label now."
                     }
                 } Catch {
                     Write-Host "Error creating $($Username) on $($ComputerName):  $($Error[0].Exception.Message)"
@@ -246,19 +192,19 @@
         $UnknownDevices = Get-Unknown-Devices $ComputerName
 
         if($DisplayDriver) {
-            "Display Driver is wrong"
+            Write-Host "Display Driver is wrong"
         } else {
             $CheckBoxes[22].Value = 1
         }
 
         if($UnknownDevices) {
-            "There are unknown devices"
+            Write-Host "There are unknown devices"
         } else {
             $CheckBoxes[23].Value = 1
         }
 
         if(!$DisplayDriver -and !$UnknownDevices) {
-            "Proper drivers are installed"
+            Write-Host "Proper drivers are installed"
         }
 
         $Programs = Get-Programs $ComputerName
@@ -330,17 +276,17 @@
         # FM Checkbox number is 61
 
         # Add computer to database
-        Add-Computer $ComputerName "$($FirstName) $($LastName)" $Email
+        Add-Computer $ComputerName
 
         # Bitlocker Status
         $Bitlocker = manage-bde -ComputerName $ComputerName -status | Select-String -Pattern "Percentage Encrypted:"
 
         while(!($Bitlocker | Select-String -Pattern "100.0%")){
-            "$($Bitlocker). Waiting one minute"
+            Write-Host "$($Bitlocker). Waiting one minute"
             Start-Sleep -s 60
             $Bitlocker = manage-bde -ComputerName $ComputerName -status | Select-String -Pattern "Percentage Encrypted:"
         }
-        "The drive is fully bitlocked"
+        Write-Host "The drive is fully bitlocked"
         $CheckBoxes[24].Value = 1
 
         $Workbook.Save()

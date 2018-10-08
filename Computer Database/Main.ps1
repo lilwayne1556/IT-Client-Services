@@ -28,15 +28,13 @@ Start-Sleep -s 5
 $Main = {
 
     Clear-Host
-"
+Write-Host "
     1 (Default). Checklist a machine
-    2 (WIP). Select Computer to perform operations (allow for regex)
-    3 (WIP). Search by Owner
-    4 (WIP). Search by Hardware information
-    5 (WIP). Mass import computers (*.csv)
+    2. Select Computer to perform operations
+    3. Mass add computers to database (*.csv)
 "
 
-    $Selection = Read-Host -Prompt "Please select an option from (1-5) "
+    $Selection = Read-Host -Prompt "Please select an option from (1-3) "
     Clear-Host
     switch($Selection){
         2 {
@@ -47,7 +45,7 @@ $Main = {
 
             $Data = Query-Database $ComputerName
             if(!(Is-Online $ComputerName) -And !($Data)){
-                "Invalid Computer Name or Offline"
+                Write-Host "Invalid Computer Name or Offline"
                 .$Main
             }
 
@@ -59,24 +57,25 @@ $Main = {
             # The user might want to do multiple actions for some computer
             while($True){
                 Clear-Host
-"
+Write-Host "
     Computer Name: $($ComputerName)
     1. Get Hardware Information
     2. Get Owner
-    3. Run actions
-    4. Edit information
-    5. Get Software
-    6. Remove computer from Database
-    7. Go back
+    3. Get Software
+    4. Run Actions
+    5. Edit Information
+    6. Print Label
+    7. Remove Computer from Database
+    8. Go back
 "
 
-                $Selection = Read-Host -Prompt "Please select an option from (1-7) "
+                $Selection = Read-Host -Prompt "Please select an option from (1-8) "
                 Clear-Host
 
                 switch($Selection){
                     1 {
                         # Get Hardware Info
-"
+Write-Host "
     Model - $($Data[1]."Model")
     MAC - $($Data[1]."MAC")
     Serial Number - $($Data[1]."Serial Number")
@@ -89,61 +88,63 @@ $Main = {
 
                     2 {
                         # Get Owner
-"
+Write-Host "
     Computer Owner - $($Data[1]."Owner")
+    Email - $($Data[1]."Email")
 "
                         Wait
                     }
 
                     3 {
-                        # Run Actions
-                        Run-Actions $ComputerName
-                        "Actions have been successfully ran"
-                        Wait
-                    }
-
-                    4 {
-                        # Edit Information
-
-                    }
-
-                    5 {
                         # Get Software
 
                     }
 
+                    4 {
+                        # Run Actions
+                        Run-Actions $ComputerName
+                        Write-Host "Actions have been successfully ran"
+                        Wait
+                    }
+
+                    5 {
+                        # Edit Information
+
+                    }
+
                     6 {
+                        Add-Label $ComputerName
+                        Wait
+                    }
+
+                    7 {
                         # Remove from Database
 
                     }
 
-                    7 {
-                        # Go back
-                        .$Main
-                    }
+                    8 { .$Main }
                 }
             }
 
         }
-        5 {
+
+        3 {
+            Write-Host "Name sure the Computer Name column is named 'Name'"
+            Wait
             $filename = Get-Filename("Select a CSV file to import", "CSV (*.csv)| *.csv")
-            $ComputerSpreadsheet = Import-Csv $filename
+            $ComputerSpreadsheet = Import-CSV $filename
+
+            if(!$ComputerSpreadsheet.Name){
+                Write-Host "Invalid CSV Spreadsheet, Rename computer name column to Name"
+                .$Main
+            }
 
             foreach($Computer in $ComputerSpreadsheet){
-                if(-Not (Is-Online $Computer.Name)){
-                    continue
-                }
-                if($Computer.Owner){
-                    $Owner = Separate-Owner-Field-Samanage $Computer.Owner
-                }
-                else {
-                    $Owner = ""
-                }
-
-                Add-Computer $Computer.Name $Owner
+                Add-Computer $Computer.Name
             }
         }
-        default {Checklist-Helper}
+
+        default { Checklist-Helper }
     }
 
     .$Main

@@ -29,3 +29,4 @@
 . ..\Functions\Get-Config-Path.ps1
 . ..\Functions\Get-Folder.ps1
 . ..\Functions\Get-Owner.ps1
+. ..\Functions\Add-Label.ps1

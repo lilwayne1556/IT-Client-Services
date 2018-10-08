@@ -1,4 +1,4 @@
-﻿function Add-Computer($ComputerName, $Owner, $Email){
+﻿function Add-Computer($ComputerName){
     # https://technet.microsoft.com/en-us/library/2009.05.scriptingguys.aspx
 
     $Config = From-XML "Database"
@@ -9,13 +9,6 @@
         $Config = From-XML "Database"
     }
 
-
-    $Data = Query-Database $ComputerName
-
-    if($Data){
-        "$($ComputerName) already exists in database"
-        return
-    }
     try{
         $LastUser = Get-Last-User $ComputerName
         $MAC = Get-Mac $ComputerName | Out-String
@@ -29,6 +22,19 @@
         $Monitors = Get-Monitors $ComputerName
         $Printers = Get-Printers $ComputerName | Out-String
         $Programs = Get-Programs $ComputerName | Out-String
+
+        $ADUser = From-CatID $ComputerName
+        if($ADUser)
+        {
+            $FirstName = $ADUser.GivenName
+            $LastName = $ADUser.Surname
+            $Email = $ADUser.UserPrincipalName
+            $Owner = "$($FirstName) $($LastName)"
+        }
+
+        if(!$FirstName){
+            $Owner = $OU
+        }
     }
     catch{
         "Do not have access to $($ComputerName)"
@@ -37,8 +43,16 @@
 
     $Database = Connect-Database $Config.Location
     $Table = new-object -com "ADODB.Recordset"
-    $Table.Open("Select * from Inventory", $Database, 3, 3)
-    $Table.AddNew()
+    $Data = Query-Database $ComputerName
+
+    if($Data){
+        $Query = "SELECT * FROM Inventory WHERE [Computer Name]='$($ComputerName)'"
+        $Table.Open($Query, $Database, 3, 3)
+    } else {
+        $Table.Open("Select * from Inventory", $Database, 3, 3)
+        $Table.AddNew()
+    }
+
     $Table.Fields.Item("Computer Name") = $ComputerName.ToUpper()
     $Table.Fields.Item("Owner") = $Owner
     $Table.Fields.Item("Email") = $Email
@@ -57,5 +71,9 @@
     $Table.Update()
 
     $Database.Close()
-    "$($ComputerName) Added to database"
+    if($Data){
+        Write-Host "$($ComputerName) Updated"
+    } else {
+        Write-Host "$($ComputerName) Added to database"
+    }
 }
