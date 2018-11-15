@@ -29,7 +29,6 @@ Function From-CatID()
 
     process
     {
-        $CatID = ""
         $ComputerName.split("-") | ForEach {
             $ADUser = Get-ADUser -Filter {SamAccountName -like $_}
             if($ADUser)

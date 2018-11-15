@@ -34,11 +34,15 @@
         # Prompt for Computer Name
         $ComputerName = Read-Host -Prompt 'Input the computer name: '
         $ComputerName = $ComputerName.ToUpper().Trim()
-
-        # Checks if computer is online
-        if(-Not (Is-Online $ComputerName)){
+		
+		# Checks if computer is online
+		if (!$ComputerName)
+		{
+			return
+		}
+        elseif(-Not (Is-Online $ComputerName)){
             Write-Host "The computer is offline or the name is wrong"
-            Start-Sleep -s 3
+            Wait
             .$ChecklistScript
         }
 
@@ -68,22 +72,26 @@
         }
 
         Write-Host "Please make computer label now"
-        Start-Sleep -s 2
+        Wait
 
         # Start Remote Session
         mstsc /v:$ComputerName
 
         # Create excel sheet https://blogs.technet.microsoft.com/heyscriptingguy/2006/09/08/how-can-i-use-windows-powershell-to-automate-microsoft-excel/
         $ExcelApp = New-Object -comobject Excel.Application
-        $ExcelApp.Visible = $TRUE
 
         # Open existing checklist
         $Workbook = $ExcelApp.Workbooks.Open($Config.Default.Location)
         $Workbook.SaveAs("$($Config.Folder.Location)\$($ComputerName).xlsm")
-
+		
+		if ($Workbook.Name -match "##Default Machine Checklist - Copy.xlsm")
+		{
+			Write-Host "You cannot overwrite the default checklist"
+			Wait
+			return
+		}
         # Select proper sheet in the workbook
         $Checklist = $Workbook.WorkSheets.Item(1)
-
 
         $Fullname = Get-Fullname $env:username
         $Checklist.Cells.Item(2, 3) = "$($Fullname)"
@@ -272,10 +280,12 @@
             $CheckBoxes[54].Value = 1
         }
         $Workbook.Save()
-
         # FM Checkbox number is 61
-
-        # Add computer to database
+		
+		# Show Excel sheet now
+		$ExcelApp.Visible = $TRUE
+		
+		# Add computer to database
         Add-Computer $ComputerName
 
         # Bitlocker Status

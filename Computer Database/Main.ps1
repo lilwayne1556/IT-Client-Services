@@ -1,12 +1,6 @@
 ﻿# This will be used to replace Samange's inventory system until
 # we are able to get a complete replacement for it
 
-# Must be ran as 32 bit for database to work as we only have 32 bit version of Office
-# If we get 64 bit version, then use 64 bit powershell
-# This must be ran to enable scripts to be run on 32 bit powrshell
-# set-executionpolicy unrestricted
-# https://stackoverflow.com/questions/4037939/powershell-says-execution-of-scripts-is-disabled-on-this-system
-
 # Layout
 # 1 (Default). Checklist a machine
 # 2. Select Computer to perform operations (allow for regex) "Check if computer is either online or in the database, If not in the database then ask to add it"
@@ -29,7 +23,7 @@ $Main = {
 
     Clear-Host
 Write-Host "
-    1 (Default). Checklist a machine
+    1. Checklist a machine
     2. Select Computer to perform operations
     3. Mass add computers to database (*.csv)
 "
@@ -37,7 +31,10 @@ Write-Host "
     $Selection = Read-Host -Prompt "Please select an option from (1-3) "
     Clear-Host
     switch($Selection){
-        2 {
+		1 {
+			Checklist-Helper
+		}
+		2 {
             $ComputerName = Read-Host -Prompt "Input Computer Name: "
             # Check whether the computer is in the database or online
 
@@ -127,7 +124,6 @@ Write-Host "
             }
 
         }
-
         3 {
             Write-Host "Name sure the Computer Name column is named 'Name'"
             Wait
@@ -136,17 +132,21 @@ Write-Host "
 
             if(!$ComputerSpreadsheet.Name){
                 Write-Host "Invalid CSV Spreadsheet, Rename computer name column to Name"
-                .$Main
-            }
-
-            foreach($Computer in $ComputerSpreadsheet){
-                Add-Computer $Computer.Name
-            }
-        }
-
-        default { Checklist-Helper }
-    }
-
+			}
+			
+			workflow Mass-Import
+			{
+				param($ComputerNames)
+				foreach -parallel ($Computer in $ComputerNames)
+				{
+					Add-Computer $Computer.Name
+				}
+			}
+			
+			Mass-Import $ComputerSpreadsheet.Name
+		}
+	}
+	
     .$Main
 }
 

@@ -10,7 +10,7 @@
     }
 
     try{
-        $LastUser = Get-Last-User $ComputerName
+        $LastUser = Get-Last-User $ComputerName | Out-String
         $MAC = Get-Mac $ComputerName | Out-String
         $SerialNumber = Get-Serial-Number $ComputerName | Out-String
         $OU = Get-OU $ComputerName | Out-String
