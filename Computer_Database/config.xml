@@ -1,0 +1,12 @@
+<Config>
+    <Checklist>
+        <!--Location for default checklist-->
+        <Default Location="\\fsa.ad.uni.edu\it-cs\Ustechs\checklists\##Default Machine Checklist.xlsm" />
+        <Folder Location="\\fsa.ad.uni.edu\it-cs\Ustechs\checklists" />
+        <!--Location for label template-->
+        <Label Location="">
+            <!--Template for the column layout of the sheet-->
+        </Label>
+    </Checklist>
+    <Database Location="\\fsa.ad.uni.edu\it-cs\Ustechs\Waynes_Scripts\IT-Client-Services\Computer_Database\Database\Inventory.accdb" />
+</Config>

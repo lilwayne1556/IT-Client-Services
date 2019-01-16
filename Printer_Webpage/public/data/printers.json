@@ -1,0 +1,212 @@
+[
+    {
+        "Printer Name":  "SCC-WRC",
+        "Address":  "wrc-dell5460.scc.uni.edu",
+        "Black Toner":  0.32,
+        "Imaging Unit":  0.83,
+        "Maintenance Kit":  0.41,
+        "Roller Kit":  0.62,
+        "Pages Printed":  315980,
+        "Sides On Cart":  27053
+    },
+    {
+        "Printer Name":  "SCC-Towers",
+        "Address":  "tow-dell5460-2.scc.uni.edu",
+        "Black Toner":  0.45,
+        "Imaging Unit":  0.31,
+        "Maintenance Kit":  0.89,
+        "Roller Kit":  0.93,
+        "Pages Printed":  421476,
+        "Sides On Cart":  20775
+    },
+    {
+        "Printer Name":  "SCC-Shull",
+        "Address":  "134.161.97.7",
+        "Black Toner":  1,
+        "Imaging Unit":  0.23,
+        "Maintenance Kit":  0.33,
+        "Roller Kit":  0.56,
+        "Pages Printed":  333749,
+        "Sides On Cart":  178
+    },
+    {
+        "Printer Name":  "SCC-SEC Lobby",
+        "Address":  "seclobby-5460dn.coe.uni.edu",
+        "Black Toner":  0.36,
+        "Imaging Unit":  0.89,
+        "Maintenance Kit":  0.45,
+        "Roller Kit":  0.64,
+        "Pages Printed":  108061,
+        "Sides On Cart":  25442
+    },
+    {
+        "Printer Name":  "SCC-Roth",
+        "Address":  "134.161.96.13",
+        "Black Toner":  0.4,
+        "Imaging Unit":  0.78,
+        "Maintenance Kit":  0.58,
+        "Roller Kit":  0.74,
+        "Pages Printed":  281396,
+        "Sides On Cart":  23361
+    },
+    {
+        "Printer Name":  "SCC-Rider",
+        "Address":  "134.161.98.8",
+        "Black Toner":  0.02,
+        "Imaging Unit":  0.74,
+        "Maintenance Kit":  0.63,
+        "Roller Kit":  0.76,
+        "Pages Printed":  317573,
+        "Sides On Cart":  42577
+    },
+    {
+        "Printer Name":  "SCC-Redeker",
+        "Address":  "rdc7-dell5460-2.scc.uni.edu",
+        "Black Toner":  0.85,
+        "Imaging Unit":  0.23,
+        "Maintenance Kit":  0.05,
+        "Roller Kit":  0.38,
+        "Pages Printed":  388712,
+        "Sides On Cart":  4707
+    },
+    {
+        "Printer Name":  "SCC-PantherVillage",
+        "Address":  "134.161.94.12",
+        "Black Toner":  0.76,
+        "Imaging Unit":  0.88,
+        "Maintenance Kit":  1,
+        "Roller Kit":  1,
+        "Pages Printed":  1816,
+        "Sides On Cart":  1816
+    },
+    {
+        "Printer Name":  "SCC-Maucker-2",
+        "Address":  "maul05-dell5460-2.scc.uni.edu",
+        "Black Toner":  0.25,
+        "Imaging Unit":  0.24,
+        "Maintenance Kit":  0.68,
+        "Roller Kit":  0.79,
+        "Pages Printed":  263118,
+        "Sides On Cart":  24630
+    },
+    {
+        "Printer Name":  "SCC-Maucker-1",
+        "Address":  "maul05-dell5460.scc.uni.edu",
+        "Black Toner":  0.68,
+        "Imaging Unit":  0.5,
+        "Maintenance Kit":  0.65,
+        "Roller Kit":  0.77,
+        "Pages Printed":  269204,
+        "Sides On Cart":  12093
+    },
+    {
+        "Printer Name":  "SCC-MAU199D",
+        "Address":  "scc-mau199d.scc.uni.edu",
+        "Black Toner":  0.06,
+        "Imaging Unit":  0.08,
+        "Maintenance Kit":  0.58,
+        "Roller Kit":  0.74,
+        "Pages Printed":  80474,
+        "Sides On Cart":  34931
+    },
+    {
+        "Printer Name":  "SCC-MAU099E",
+        "Address":  "scc-mau099e.scc.uni.edu",
+        "Black Toner":  0.09,
+        "Imaging Unit":  0.11,
+        "Maintenance Kit":  0.58,
+        "Roller Kit":  0.74,
+        "Pages Printed":  80480,
+        "Sides On Cart":  37162
+    },
+    {
+        "Printer Name":  "SCC-Lawther",
+        "Address":  "law2016-dell5460.scc.uni.edu",
+        "Black Toner":  0.67,
+        "Imaging Unit":  0.62,
+        "Maintenance Kit":  0.87,
+        "Roller Kit":  0.92,
+        "Pages Printed":  226147,
+        "Sides On Cart":  13835
+    },
+    {
+        "Printer Name":  "SCC-Lang",
+        "Address":  "lng113-dell5460.scc.uni.edu",
+        "Black Toner":  0.68,
+        "Imaging Unit":  0.09,
+        "Maintenance Kit":  0.19,
+        "Roller Kit":  0.47,
+        "Pages Printed":  161721,
+        "Sides On Cart":  12576
+    },
+    {
+        "Printer Name":  "SCC-GIL LOBBY",
+        "Address":  "scc-gil-lobby.it-cs.uni.edu",
+        "Black Toner":  0.79,
+        "Imaging Unit":  0.85,
+        "Maintenance Kit":  1,
+        "Roller Kit":  0.96,
+        "Pages Printed":  12288,
+        "Sides On Cart":  5205
+    },
+    {
+        "Printer Name":  "SCC-CCL",
+        "Address":  "itt036-dell5460.scc.uni.edu",
+        "Black Toner":  0.09,
+        "Imaging Unit":  0.52,
+        "Maintenance Kit":  0.82,
+        "Roller Kit":  0.89,
+        "Pages Printed":  34348,
+        "Sides On Cart":  26154
+    },
+    {
+        "Printer Name":  "SCC-CBB",
+        "Address":  "SCC-CBB.scc.uni.edu",
+        "Black Toner":  0.28,
+        "Imaging Unit":  0.54,
+        "Maintenance Kit":  0.79,
+        "Roller Kit":  0.87,
+        "Pages Printed":  40069,
+        "Sides On Cart":  28747
+    },
+    {
+        "Printer Name":  "SCC-Campbell",
+        "Address":  "cam2033-dell5460.scc.uni.edu",
+        "Black Toner":  0.11,
+        "Imaging Unit":  0.18,
+        "Maintenance Kit":  0.35,
+        "Roller Kit":  0.58,
+        "Pages Printed":  529421,
+        "Sides On Cart":  34619
+    },
+    {
+        "Printer Name":  "SCC-BRIDGE",
+        "Address":  "brd-dell5460.scc.uni.edu",
+        "Black Toner":  0.36,
+        "Imaging Unit":  0.34,
+        "Maintenance Kit":  0.13,
+        "Roller Kit":  0.43,
+        "Pages Printed":  775162,
+        "Sides On Cart":  23512
+    },
+    {
+        "Printer Name":  "SCC-Bartlett",
+        "Address":  "bar0017-dell5460.scc.uni.edu",
+        "Black Toner":  0.67,
+        "Imaging Unit":  0.3,
+        "Maintenance Kit":  0.68,
+        "Roller Kit":  0.8,
+        "Pages Printed":  62553,
+        "Sides On Cart":  11760
+    },
+    {
+        "Printer Name":  "ITS-US-DELL5460-108",
+        "Address":  "134.161.116.90",
+        "Black Toner":  0.06,
+        "Imaging Unit":  0.77,
+        "Maintenance Kit":  0.81,
+        "Roller Kit":  0.88,
+        "Pages Printed":  38529,
+        "Sides On Cart":  35461
+    }
+]

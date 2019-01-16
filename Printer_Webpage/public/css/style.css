@@ -1,0 +1,44 @@
+body {
+    background-color: #4B116F;
+}
+
+.good {
+    background-color: green !important;
+    color: white !important;
+}
+
+.okay {
+    background-color: yellow !important;
+}
+
+.bad {
+    background-color: red !important;
+    color: white !important;
+}
+
+.gone {
+    background-color: black !important;
+    color: white !important;
+}
+
+#logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    height: 15%;
+    min-height: 100px;
+    max-height: 150px;
+    width: 80%;
+    max-width: 650px;
+}
+
+th {
+    position: relative;
+}
+
+.arrow {
+    position: absolute;
+    display: inline;
+    right: 20px;
+}

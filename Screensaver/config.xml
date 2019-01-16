@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+
+<Screensaver>
+    <Password>uni123</Password>
+    <InProduction>\\fsa\IT-CS\GP\Screensaver\images</InProduction>
+    <Upcoming>\\fsa\IT-CS\GP\Screensaver\upcoming images</Upcoming>
+    <Old>\\fsa\IT-CS\GP\Screensaver\old images</Old>
+    <Logs>\\fsa\IT-CS\GP\Screensaver\Logs</Logs>
+    <API>
+        <Client_ID>98506441879-o64a1ovs8s253h0urev0osmf0ht2dc9v.apps.googleusercontent.com</Client_ID>
+        <Client_Secret>GaDV6lWZ3NmGb9sY9W_yPLOn</Client_Secret>
+        <Redirect_URI>urn:ietf:wg:oauth:2.0:oob</Redirect_URI>
+	<Refresh_Token>1/53xSSmV-j20RWxDCML6G5tSUJrj94gS0VQVY_i1ckvk</Refresh_Token>
+    </API>
+</Screensaver>
